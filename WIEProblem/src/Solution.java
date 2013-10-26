@@ -51,10 +51,24 @@ public class Solution {
 			//start seq
 			int[][] times = new int[trains][dist.length * 2];
 			for(int j = 0; j < trains; j++) {
+				count = 0-120;
 				for(int i = 0; i < dist.length; i++) {
+					for(int k = j; k > 0; k--) {
+						try {
+							if(times[k - 1][i*2 + 2] > count + 120) {
+								count = times[k - 1][i*2+2] -120;
+							}
+						}
+						catch(IndexOutOfBoundsException e) {
+							if(times[k - 1][i*2 + 1] > count + 120) {
+								count = times[k - 1][i*2+1] -120;
+							}
+							continue;
+						}
+					}
 					count++;
-					//System.out.println(count);
-					times[j][i*2] = count;
+					count+=120;
+						times[j][i*2] = count;
 					double time = count;
 					if(dist[i] > maxAccDistance + maxDeaccDistance) {
 
@@ -70,19 +84,27 @@ public class Solution {
 						times[j][i*2 + 1] = (int) Math.round(time);
 						//System.out.println(times[j][i*2 + 1]);
 					}
-					count = times[j][i*2 + 1] + 120;
+					count = times[j][i*2 + 1];
 				}
 			}
 			for(int j = 0; j < trains; j++) {
 				System.out.print((j+1) + " : *****");
 				for(int i = 0; i < times[0].length; i+=2) {
 
-					System.out.print(" - " +times[j][i]+  "  " +times[j][i+1]);	
+					System.out.print(" -");
+					for(int k = (times[j][i] + "").length(); k < 6; k++) {
+						System.out.print(" ");
+					}
+					System.out.print(times[j][i]);
+					for(int k = (times[j][i+1] + "").length(); k < 6; k++) {
+						System.out.print(" ");
+					}
+					System.out.print(" " + times[j][i+1]);	
+
 				}
 				System.out.println(" *****");
+
 			}
-
-
 		}
 		catch(Exception e) {
 			System.out.println("ERROR");
