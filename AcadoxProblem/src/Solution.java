@@ -10,12 +10,13 @@ public class Solution {
 
 		for(int i = 0; i < 20 && in.hasNext(); i++) {
 			try {
-				String[] str = in.nextLine().split(" ");
+				String[] str = in.nextLine().split("\\s");
 				if(str.length == 0)
 					continue;
 				if(str.length == 1) {
-					System.out.println(hexStringTo4Places(str[0]));
-					continue;
+					throw new Exception();
+					//System.out.println(hexStringTo4Places(str[0]));
+					//continue;
 				}		
 				String first;
 				String second;
@@ -33,15 +34,16 @@ public class Solution {
 					}
 					else throw new Exception();
 				}
+				if(str.length > 3)
+					throw new Exception();
 				first = str[0];
 				second = str[1];
 				symbol = str[2];
 				Long firstInt = Long.parseLong(first,16);
 				Long secondInt = Long.parseLong(second,16);
 				Long result = 0L;
-				if(!symbol.isEmpty() && symbol.length() > 0) {
-					//error
-				}
+				if(symbol.isEmpty() || symbol.length() > 1) {
+					throw new Exception();				}
 				switch(symbol.charAt(0)) {
 				case '+':
 					result = firstInt + secondInt;
