@@ -20,31 +20,37 @@ public class Solution {
 					sx = j;
 					sy = i;
 				}
-
+				visited[i][j] = Float.MAX_VALUE;
 				map[i][j] = curr.charAt(j);
 			}
 		}
 		visited[sy][sx] = 0;
 		float val = traverseOasis(sx, sy, 0,0, visited, map);
-		if(val > 0 && val < Float.MAX_VALUE)
-		System.out.println(floatToOneDecimal(val));
+		if(val > 0 && val < Float.MAX_VALUE - 1)
+			System.out.println(val);
 		else System.out.println("IMPOSSIBLE");
 	}
 	public static float traverseOasis(int x, int y, float count, float daysWoutWater, float[][] visited, char[][] map) {
 		if(x >= map[0].length || y >= map.length || x < 0 || y < 0) {
 			return -1;
 		}
-		if(visited[y][x] != 0 && visited[y][x] < count) {
+		if(visited[y][x] < count) {
 			return -1;
 		}if(daysWoutWater > 5)
 			return -1;
 		if(map[y][x] == 'E') {
+//			for(int i = 0; i < visited.length; i++) {
+//				for(int j = 0; j < visited[0].length;j++) {
+//					visited[i][j] = 0;
+//				}
+//			}
 			return count;
 		}
 		if(map[y][x] == '+') {
 			daysWoutWater = 0;
 			//count++;
 		}
+		float old = visited[y][x];
 		visited[y][x] = count;
 		float value = Float.MAX_VALUE;
 		float currValue = 0;
@@ -64,10 +70,23 @@ public class Solution {
 
 			}
 		}
+		visited[y][x] = old;
 		return value;
 	}
+	public static float[][] copyOf(float[][] arr) {
+		float[][] newArr = new float[arr.length][arr[0].length];
+		for(int i = 0; i < arr.length; i++) {
+			for(int j = 0; j < arr[0].length; j++) {
+				newArr[i][j] = arr[i][j];
+			}
+		}
+		return newArr;
+		
+	}
 	public static String floatToOneDecimal(float num) {
-		String fltNum = num + "";
+		num *= 10;
+		num = Math.round(num);
+		String fltNum = (num/10 + "") + (num%10 + "");
 		for(int i = 0; i < fltNum.length(); i++) {
 			if(fltNum.charAt(i) == '.') {
 				return fltNum.substring(0, i + 2);
@@ -75,4 +94,5 @@ public class Solution {
 		}
 		return fltNum;
 	}
+	
 }
