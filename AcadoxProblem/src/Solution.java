@@ -11,73 +11,77 @@ public class Solution {
 
 
 
-		for(int j = 0; j < 20 && in.hasNextLine(); j++) {
+		for(int j = 0;in.hasNextLine(); j++) {
 			String[] str = in.nextLine().split("\\s");
 			Stack<Integer> st = new Stack<Integer>();
+
 			try {
-				forloop:
-					for(int i = 0; i < str.length; i++) {
-						if(!str[1].matches("([0-9 | A-F | a-f]){1,4}") && !str[1].matches("[+-&|~X")) {
+				//if(str.length > 20)
+					//throw new Exception();
+				for(int i = 0; i < str.length && i < 20; i++) {
+					if(str[i].length() > 4) {
+						if(!(str[i].charAt(0) == '-') || str[i].length() > 5)
+							throw new Exception();
+					}
+					if(isIntegerString(str[i])) {
+						st.push(Integer.parseInt(str[i],16));
+					}
+					else if(str[i].length() == 1) {
+						int first;
+						int second;
+						int result;
+						switch(str[i].charAt(0)) {
+						case '+':
+							first = st.pop();
+							second = st.pop();
+							result = (short) (first + second);
+							if(result < first || result < second) {
+								result = Integer.MAX_VALUE;
+							}
+							st.push(result);
+							break;
+						case '-':
+							first = st.pop();
+							second = st.pop();
+							result = (second - first);
+							if(result < 0) {
+								result = 0;
+							}
+							st.push(result);
+							break;
+						case '&':
+							second = st.pop();
+							first = st.pop();
+							st.push((first & second));
+							break;
+						case '|':
+							second = st.pop();
+							first = st.pop();
+							st.push((first | second));
+							break;
+						case 'X':
+							second = st.pop();
+							first = st.pop();
+							st.push((first ^ second));
+							break;
+						case '~':
+							first = st.pop();
+							st.push( ~first);
+							break;
+						default:
 							throw new Exception();
 						}
-						if(isIntegerString(str[i])) {
-							st.push(Integer.parseInt(str[i],16));
-						}
-						else if(str[i].length() == 1) {
-							int first;
-							int second;
-							int result;
-							switch(str[i].charAt(0)) {
-							case '+':
-								first = st.pop();
-								second = st.pop();
-								result = (short) (first + second);
-								if(result < first || result < second) {
-									st.push(Integer.MAX_VALUE);
-									break;
-								}
-								st.push(result);
-								break;
-							case '-':
-								first = st.pop();
-								second = st.pop();
-								result = (second - first);
-								if(result < 0) {
-									st.push(0);
-									break;
-								}
-								st.push(result);
-								break;
-							case '&':
-								second = st.pop();
-								first = st.pop();
-								st.push((first & second));
-								break;
-							case '|':
-								second = st.pop();
-								first = st.pop();
-								st.push((first | second));
-								break;
-							case 'X':
-								second = st.pop();
-								first = st.pop();
-								st.push((first ^ second));
-								break;
-							case '~':
-								first = st.pop();
-								st.push( ~first);
-								break;
-							default:
-								throw new Exception();
-							}
-						}
 					}
-			if(st.size() == 1) {
-				System.out.println(hexStringTo4Places(Integer.toHexString(st.pop())).toUpperCase());
-			}
-			else {
-				throw new Exception();
-			}
+					else {
+						throw new Exception();
+					}
+				}
+				if(st.size() == 1) {
+					System.out.println(hexStringTo4Places(Integer.toHexString(st.pop())).toUpperCase());
+				}
+				else {
+					throw new Exception();
+				}
 			}
 			catch(Exception e) {
 				System.out.println("ERROR");
