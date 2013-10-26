@@ -11,7 +11,7 @@ public class Solution {
 		Scanner in = new Scanner(System.in);
 		int num = Integer.parseInt(in.nextLine());
 		for(int i = 1; i < num; i++) {
-			String[] str = in.nextLine().split(" ");
+			String[] str = in.nextLine().split("[ ]+");
 			Node currNode = map.get(str[0]);
 			if(currNode == null) {
 				currNode = new Node(str[0]);
@@ -25,9 +25,37 @@ public class Solution {
 			currNode.childList.add(nextNode);
 			nextNode.parentList.add(currNode);
 		}
+		ArrayList<Node> parentless = new ArrayList<Node>();
+		for(Node n:map.values()) {
+			if(n.parentList.isEmpty()) {
+				parentless.add(n);
+			}
+		}
+		Node currNode = null;
+		for(Node n:parentless) {
+			currNode = n;
+			while(currNode.getChildList().size() == 1) {
+				currNode = currNode.childList.get(0);
+			}
+			break;
+		}
+		ArrayList<Node> outList = new ArrayList<Node>();
+		outList.add(currNode);
+		while(currNode.parentList.size() == 1) {
+			currNode = currNode.parentList.get(0);
+			outList.add(currNode);
+		}
+		TreeSet<String> set = new TreeSet<String>();
+		for(Node n:outList) {
+			set.add(n.name);
+		}
+		for(String s: set) {
+			System.out.println(s);
+		}
 		
 
 	}
+
 	static class Node{
 		int timesReached;
 		String name;
