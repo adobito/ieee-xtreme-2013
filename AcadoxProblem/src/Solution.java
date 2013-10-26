@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 
 
 public class Solution {
@@ -8,79 +9,99 @@ public class Solution {
 
 		Scanner in = new Scanner(System.in);
 
-		for(int i = 0; i < 20 && in.hasNext(); i++) {
+
+
+		for(int j = 0; j < 20 && in.hasNextLine(); j++) {
+			String[] str = in.nextLine().split("\\s");
+			Stack<Integer> st = new Stack<Integer>();
 			try {
-				String[] str = in.nextLine().split("\\s");
-				if(str.length == 0)
-					continue;
-				if(str.length == 1) {
-					throw new Exception();
-					//System.out.println(hexStringTo4Places(str[0]));
-					//continue;
-				}		
-				String first;
-				String second;
-				String symbol;
-
-
-				if(str.length == 2) {
-					first = str[0];
-					symbol = str[1];
-					if(str[1].length() == 1 && str[1].charAt(0) == '~') {
-						Long value = ~Long.parseLong(str[0]);
-
-						System.out.println(hexStringTo4Places(Long.toHexString(value)).toUpperCase());
-						continue;
+				forloop:
+					for(int i = 0; i < str.length; i++) {
+						if(!str[1].matches("([0-9 | A-F | a-f]){1,4}") && !str[1].matches("[+-&|~X")) {
+							throw new Exception();
+						}
+						if(isIntegerString(str[i])) {
+							st.push(Integer.parseInt(str[i],16));
+						}
+						else if(str[i].length() == 1) {
+							int first;
+							int second;
+							int result;
+							switch(str[i].charAt(0)) {
+							case '+':
+								first = st.pop();
+								second = st.pop();
+								result = (short) (first + second);
+								if(result < first || result < second) {
+									st.clear();
+									st.push(Integer.MAX_VALUE);
+									break forloop;
+								}
+								st.push(result);
+								break;
+							case '-':
+								first = st.pop();
+								second = st.pop();
+								result = (second - first);
+								if(result < 0) {
+									st.clear();
+									st.push(0);
+									break forloop;
+								}
+								st.push(result);
+								break;
+							case '&':
+								second = st.pop();
+								first = st.pop();
+								st.push((first & second));
+								break;
+							case '|':
+								second = st.pop();
+								first = st.pop();
+								st.push((first | second));
+								break;
+							case 'X':
+								second = st.pop();
+								first = st.pop();
+								st.push((first ^ second));
+								break;
+							case '~':
+								first = st.pop();
+								st.push( ~first);
+								break;
+							default:
+								throw new Exception();
+							}
+						}
 					}
-					else throw new Exception();
-				}
-				if(str.length > 3)
-					throw new Exception();
-				first = str[0];
-				second = str[1];
-				symbol = str[2];
-				Long firstInt = Long.parseLong(first,16);
-				Long secondInt = Long.parseLong(second,16);
-				Long result = 0L;
-				if(symbol.isEmpty() || symbol.length() > 1) {
-					throw new Exception();				}
-				switch(symbol.charAt(0)) {
-				case '+':
-					result = firstInt + secondInt;
-					if(result < firstInt || result < secondInt)
-						result = Long.MAX_VALUE;
-					break;
-				case '-':
-					result = firstInt - secondInt;
-					if (result < 0) 
-						result = 0L;
-					break;
-				case '&':
-					result = firstInt & secondInt;
-					break;
-				case '|':
-					result = firstInt | secondInt;
-					break;
-				case 'X':
-					result = firstInt ^ secondInt;
-					break;
-				default:
-					throw new Exception();
-				}
-				if(str.length == 4) {
-					if(str[3].length() == 1 && str[3].charAt(0) == '~')
-						result = ~result;
-				}
-				System.out.println(hexStringTo4Places(Long.toHexString(result)).toUpperCase());
-				continue;
+			if(st.size() == 1) {
+				System.out.println(hexStringTo4Places(Integer.toHexString(st.pop())).toUpperCase());
+			}
+			else {
+				throw new Exception();
+			}
 			}
 			catch(Exception e) {
 				System.out.println("ERROR");
 				continue;
 			}
 		}
+
+
+	}
+
+	private static boolean isIntegerString(String str) {
+		try {
+			Integer.parseInt(str,16);
+			return true;
+		}
+		catch (Exception e ) {
+			return false;
+		}
+
 	}
 	private static String hexStringTo4Places(String hex) {
+
 		if(hex.length() == 1) {
 			return "000" + hex;
 		}
