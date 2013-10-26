@@ -10,7 +10,7 @@ public class Solution {
 		int x = Integer.parseInt(str[1]);
 		int y = Integer.parseInt(str[0]);
 		char[][] map = new char[y][x];
-		float[][] visited = new float[y][x];
+		Pair[][] visited = new Pair[y][x];
 		int sx = 0;
 		int sy = 0;
 		for(int i = 0; i < y; i++) {
@@ -20,21 +20,21 @@ public class Solution {
 					sx = j;
 					sy = i;
 				}
-				visited[i][j] = Float.MAX_VALUE;
+				visited[i][j] = new Pair(Float.MAX_VALUE,Float.MAX_VALUE);;
 				map[i][j] = curr.charAt(j);
 			}
 		}
-		visited[sy][sx] = 0;
+		visited[sy][sx].days = 0;
 		float val = traverseOasis(sx, sy, 0,0, visited, map);
 		if(val > 0 && val < Float.MAX_VALUE - 1)
 			System.out.println(val);
 		else System.out.println("IMPOSSIBLE");
 	}
-	public static float traverseOasis(int x, int y, float count, float daysWoutWater, float[][] visited, char[][] map) {
+	public static float traverseOasis(int x, int y, float count, float daysWoutWater, Pair[][] visited, char[][] map) {
 		if(x >= map[0].length || y >= map.length || x < 0 || y < 0) {
 			return -1;
 		}
-		if(visited[y][x] < count) {
+		if(visited[y][x].days < count && visited[y][x].thirst < daysWoutWater) {
 			return -1;
 		}if(daysWoutWater > 5)
 			return -1;
@@ -50,8 +50,9 @@ public class Solution {
 			daysWoutWater = 0;
 			//count++;
 		}
-		float old = visited[y][x];
-		visited[y][x] = count;
+		//float old = visited[y][x];
+		visited[y][x].thirst = daysWoutWater;
+		visited[y][x].days = count;
 		float value = Float.MAX_VALUE;
 		float currValue = 0;
 		for(int i = -1; i < 2; i++) {
@@ -70,7 +71,7 @@ public class Solution {
 
 			}
 		}
-		visited[y][x] = old;
+		//visited[y][x] = old;
 		return value;
 	}
 	public static float[][] copyOf(float[][] arr) {
@@ -93,6 +94,15 @@ public class Solution {
 			}
 		}
 		return fltNum;
+	}
+	static class Pair {
+		float days;
+		float thirst;
+		
+		public Pair(float days, float thirst) {
+			this.days = days;
+			this.thirst = thirst;
+		}
 	}
 	
 }
