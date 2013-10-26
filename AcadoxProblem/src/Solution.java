@@ -33,9 +33,8 @@ public class Solution {
 								second = st.pop();
 								result = (short) (first + second);
 								if(result < first || result < second) {
-									st.clear();
 									st.push(Integer.MAX_VALUE);
-									break forloop;
+									break;
 								}
 								st.push(result);
 								break;
@@ -44,9 +43,8 @@ public class Solution {
 								second = st.pop();
 								result = (second - first);
 								if(result < 0) {
-									st.clear();
 									st.push(0);
-									break forloop;
+									break;
 								}
 								st.push(result);
 								break;
