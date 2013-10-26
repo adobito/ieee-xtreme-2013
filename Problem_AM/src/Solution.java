@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 
 public class Solution {
-
+	public static ArrayList<Pair> gList;
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
 		int first = in.nextInt();
@@ -15,11 +15,19 @@ public class Solution {
 				arr[i][j] = in.nextInt();
 			}
 		}
-		int value  = Integer.MAX_VALUE;
+		Thingy thingy = new Thingy(Integer.MAX_VALUE,null);
 		for(int i = 0; i < second; i++) {
-			value = Math.min(value, recursive(0,i,0,arr, new ArrayList<Pair>()));
+			Thingy currThingy = recursiveThingy(0, i, 0,arr,new ArrayList<Pair>());
+			if(thingy.value > currThingy.value) {
+				thingy = currThingy;
+			}
 		}
-		System.out.println(value);
+		System.out.print("Minimum risk path = ");
+		for(Pair p: thingy.list) {
+			System.out.print(p);
+		}
+		System.out.println();
+		System.out.println("Risks along the path = " + thingy.value);
 		
 
 
@@ -40,7 +48,45 @@ public class Solution {
 		value = Math.min(value, recursive(x + 1, y + 1, count + arr[x][y],arr,(ArrayList<Pair>) list.clone()));
 		return value;
 	}
+	
+	@SuppressWarnings("unchecked")
+	private static Thingy recursiveThingy(int x, int y, int count, int[][] arr,ArrayList<Pair> list) { 
+		Thingy thingy = new Thingy(Integer.MAX_VALUE,null);//int value = Integer.MAX_VALUE;
+		
+		if( y < 0 || y >= arr[0].length) {
+			return thingy;
+		}
+		if(x == arr.length)
+			return new Thingy(count,list);
+		list.add(new Pair(x,y));
+		Thingy currThingy = recursiveThingy(x + 1, y - 1, count + arr[x][y],arr,(ArrayList<Pair>) list.clone());
+		if(thingy.value > currThingy.value) {
+			thingy = currThingy;
+		}
+		currThingy = recursiveThingy(x + 1, y, count + arr[x][y],arr,(ArrayList<Pair>) list.clone());
+		if(thingy.value > currThingy.value) {
+			thingy = currThingy;
+		}
+		currThingy = recursiveThingy(x + 1, y + 1, count + arr[x][y],arr,(ArrayList<Pair>) list.clone());
+		if(thingy.value > currThingy.value) {
+			thingy = currThingy;
+		}
+		
+		//value = Math.min(value, recursive(x + 1, y - 1, count + arr[x][y],arr,(ArrayList<Pair>) list.clone()));
+		//value = Math.min(value, recursive(x + 1, y, count + arr[x][y],arr,(ArrayList<Pair>) list.clone()));
+		//value = Math.min(value, recursive(x + 1, y + 1, count + arr[x][y],arr,(ArrayList<Pair>) list.clone()));
+		return thingy;
+	}
 
+	static class Thingy {
+		int value;
+		ArrayList<Pair> list;
+		
+		public Thingy(int value, ArrayList<Pair> list) {
+			this.value = value;
+			this.list = list;
+		}
+	}
 	static class Pair {
 		int x;
 		int y;
