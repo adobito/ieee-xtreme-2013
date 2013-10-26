@@ -45,11 +45,11 @@ public class Solution {
 			currNode = currNode.parentList.get(0);
 			outList.add(currNode);
 		}
-		TreeSet<String> set = new TreeSet<String>();
+		TreeSet<Integer> set = new TreeSet<Integer>();
 		for(Node n:outList) {
-			set.add(n.name);
+			set.add(Integer.parseInt(n.name));
 		}
-		for(String s: set) {
+		for(Integer s: set) {
 			System.out.println(s);
 		}
 		
