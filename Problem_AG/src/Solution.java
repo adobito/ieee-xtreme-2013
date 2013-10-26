@@ -32,10 +32,10 @@ public class Solution {
 		}
 		if(isDown) {
 			recursive(currX, currY + 1, true, turnCount,turnsWanted, n, thing);
-			recursive(currX + 1, currY, false, turnCount++,turnsWanted, n, thing);
+			recursive(currX + 1, currY, false, turnCount+1,turnsWanted, n, thing);
 		}
 		else {
-			recursive(currX, currY + 1, true, turnCount++,turnsWanted, n, thing);
+			recursive(currX, currY + 1, true, turnCount+1,turnsWanted, n, thing);
 			recursive(currX + 1, currY, false, turnCount,turnsWanted, n, thing);
 		}
 		return thing;
