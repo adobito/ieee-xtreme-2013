@@ -21,7 +21,9 @@ public class Solution {
 				for(int i = 0; i < str.length && i < 20; i++) {
 					if(str[i].length() > 4) {
 						if(!(str[i].charAt(0) == '-') || str[i].length() > 5)
-							throw new Exception();
+							st.push(Integer.parseInt("0000"));
+						st.push(Integer.parseInt("FFFF"));
+							//throw new Exception();
 					}
 					if(isIntegerString(str[i])) {
 						st.push(Integer.parseInt(str[i],16));
